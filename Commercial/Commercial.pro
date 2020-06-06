@@ -17,12 +17,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     CoordsModel.cpp \
+    CoordsTable.cpp \
     main.cpp \
     AppWindow.cpp
 
 HEADERS += \
     AppWindow.h \
-    CoordsModel.h
+    CoordsModel.h \
+    CoordsTable.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
