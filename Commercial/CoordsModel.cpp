@@ -27,7 +27,7 @@ QVariant CoordsModel::data(const QModelIndex &index, int role) const
         return {};
     }
 
-    const std::pair<int, int> coords = m_coordinates.at(index.row());
+    const std::pair<int, int>& coords = m_coordinates.at(index.row());
 
     switch (role) {
         case CoordRoles::XCoord: {
@@ -40,4 +40,13 @@ QVariant CoordsModel::data(const QModelIndex &index, int role) const
             return {};
         }
     }
+}
+
+QHash<int, QByteArray> CoordsModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles[CoordRoles::XCoord] = "X";
+    roles[CoordRoles::YCoord] = "Y";
+
+    return roles;
 }
