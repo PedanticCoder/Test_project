@@ -2,6 +2,7 @@
 #define APPWINDOW_H
 
 #include <QWidget>
+#include <QPushButton>
 
 class AppWindow : public QWidget
 {
@@ -10,5 +11,9 @@ class AppWindow : public QWidget
 public:
     AppWindow(QWidget *parent = nullptr);
     ~AppWindow();
+
+private:
+    QPushButton *m_pStartBtn;
+
 };
 #endif // APPWINDOW_H
