@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include <QWidget>
+#include <QPushButton>
 
 class AppWindow : public QWidget
 {
@@ -14,5 +15,9 @@ private:
 public:
     AppWindow(QWidget *parent = nullptr);
     ~AppWindow();
+
+private:
+    QPushButton *m_pStartBtn;
+
 };
 #endif // APPWINDOW_H
