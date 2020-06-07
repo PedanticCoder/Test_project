@@ -3,6 +3,10 @@
 
 #include <QWidget>
 
+class QGridLayout;
+class CoordsModel;
+class CoordsTable;
+
 class AppWindow : public QWidget
 {
     Q_OBJECT
@@ -10,5 +14,10 @@ class AppWindow : public QWidget
 public:
     AppWindow(QWidget *parent = nullptr);
     ~AppWindow();
+
+private:
+    QGridLayout *m_pGridLayout;
+    CoordsModel *m_pCoordsModel;
+    CoordsTable *m_pCoordsTable;
 };
 #endif // APPWINDOW_H
