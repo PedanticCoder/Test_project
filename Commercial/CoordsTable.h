@@ -2,6 +2,7 @@
 #define COORDSTABLE_H
 
 #include <QTableView>
+#include <QPoint>
 
 class CoordsTable : public QTableView
 {
