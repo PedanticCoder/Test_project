@@ -11,6 +11,9 @@ class CoordsTable : public QTableView
 public:
     CoordsTable();
     virtual ~CoordsTable();
+
+public slots:
+    void slotCustomMenuRequested(QPoint pos);
 };
 
 #endif // COORDSTABLE_H
