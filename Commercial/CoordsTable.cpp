@@ -5,8 +5,8 @@ CoordsTable::CoordsTable()
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     setSelectionBehavior(QAbstractItemView::SelectRows);
-    setSelectionMode(QAbstractItemView::SingleSelection);
-    setEditTriggers(QAbstractItemView::DoubleClicked);
+    setSelectionMode(QAbstractItemView::MultiSelection);
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
 
 //    connect(this, &QTableView::customContextMenuRequested, this, slotCustomMenuRequested(QPoint));
 

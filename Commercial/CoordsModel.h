@@ -29,7 +29,7 @@ private:
 
     using CoordData = QHash<Column, QVariant>;
 
-    std::list<CoordData> m_coordinates;
+    QList<CoordData> m_coordinates;
 };
 
 #endif // COORDSMODEL_H

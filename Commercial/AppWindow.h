@@ -2,9 +2,9 @@
 #define APPWINDOW_H
 
 #include <QWidget>
+#include <CoordsModel.h>
 
 class QGridLayout;
-class CoordsModel;
 class CoordsTable;
 
 class AppWindow : public QWidget
@@ -17,7 +17,7 @@ public:
 
 private:
     QGridLayout *m_pGridLayout;
-    CoordsModel *m_pCoordsModel;
     CoordsTable *m_pCoordsTable;
+    CoordsModel  m_CoordsModel;
 };
 #endif // APPWINDOW_H
