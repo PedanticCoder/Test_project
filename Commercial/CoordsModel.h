@@ -14,16 +14,22 @@ public:
     int rowCount(const QModelIndex &parent = {}) const override;
     int columnCount(const QModelIndex &parent = {}) const override;
     QVariant data(const QModelIndex &index = {}, int role = Qt::DisplayRole) const override;
+    bool setData( const QModelIndex& index, const QVariant& value, int role ) override;
+    QVariant headerData( int section, Qt::Orientation orientation, int role ) const override;
+    Qt::ItemFlags flags( const QModelIndex& index ) const override;
 
-    QHash<int, QByteArray> roleNames() const override;
+//    QHash<int, QByteArray> roleNames() const override;
 
 private:
-    std::vector<std::pair<int, int>> m_coordinates{{0, 0}};
 
-    enum CoordRoles {
-        XCoord = Qt::UserRole + 1,
+    enum Column {
+        XCoord = 0,
         YCoord
     };
+
+    using CoordData = QHash<Column, QVariant>;
+
+    std::list<CoordData> m_coordinates;
 };
 
 #endif // COORDSMODEL_H
