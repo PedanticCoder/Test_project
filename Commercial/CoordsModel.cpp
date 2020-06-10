@@ -36,20 +36,6 @@ QVariant CoordsModel::data(const QModelIndex &index, int role) const
         return {};
     }
 
-//    const std::pair<int, int>& coords = m_coordinates.at(index.row());
-
-//    switch (role) {
-//        case CoordRoles::XCoord: {
-//            return QVariant::fromValue(coords.first);
-//        }
-//        case CoordRoles::YCoord: {
-//            return QVariant::fromValue(coords.second);
-//        }
-//        default: {
-//            return {};
-//        }
-//    }
-
     return m_coordinates[index.row()][Column(index.column())];
 }
 
@@ -59,7 +45,7 @@ bool CoordsModel::setData(const QModelIndex &index, const QVariant &value, int r
             return false;
         }
 
-    m_coordinates[index.column()][ Column(index.row())] = value;
+    m_coordinates[index.row()][ Column(index.column())] = value;
     emit dataChanged(index, index);
 
     return true;
@@ -94,12 +80,3 @@ Qt::ItemFlags CoordsModel::flags(const QModelIndex &index) const
 
     return flags;
 }
-
-//QHash<int, QByteArray> CoordsModel::roleNames() const
-//{
-//    QHash<int, QByteArray> roles;
-//    roles[CoordRoles::XCoord] = "X";
-//    roles[CoordRoles::YCoord] = "Y";
-
-//    return roles;
-//}
