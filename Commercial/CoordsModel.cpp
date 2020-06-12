@@ -1,16 +1,20 @@
 #include "CoordsModel.h"
+#include "CoordsTable.h"
 #include <QDebug>
+#include <QAction>
 
 CoordsModel::CoordsModel()
 {
     CoordData coords;
-    coords[XCoord] = 2;
-    coords[YCoord] = 3;
 
-    int row = m_coordinates.count();
-    beginInsertRows(QModelIndex(), row, row);
-    m_coordinates.append(coords);
-    endInsertRows();
+    for(quint8 i = 0; i < 10; ++i) {
+        coords[XCoord] = i;
+        coords[YCoord] = i * 10;
+        int row = m_coordinates.count();
+        beginInsertRows(QModelIndex(), row, row);
+        m_coordinates.append(coords);
+        endInsertRows();
+    }
 }
 
 CoordsModel::~CoordsModel()
@@ -35,19 +39,21 @@ QVariant CoordsModel::data(const QModelIndex &index, int role) const
        (role!=Qt::DisplayRole && role!=Qt::EditRole)) {
         return {};
     }
-
     return m_coordinates[index.row()][Column(index.column())];
 }
 
 bool CoordsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    qDebug() << "-----setData begin!-----";
     if( !index.isValid() || role != Qt::EditRole || m_coordinates.count() <= index.row() ) {
-            return false;
-        }
+        qDebug() << "-----setData end failed!-----";
+        return false;
+    }
 
     m_coordinates[index.row()][ Column(index.column())] = value;
     emit dataChanged(index, index);
 
+    qDebug() << "-----setData end successfully!-----";
     return true;
 }
 
@@ -79,4 +85,11 @@ Qt::ItemFlags CoordsModel::flags(const QModelIndex &index) const
     }
 
     return flags;
+}
+
+void CoordsModel::deleteRow()
+{
+    beginRemoveRows(QModelIndex(), 3, 3);
+    m_coordinates.removeAt(3);
+    endRemoveRows();
 }

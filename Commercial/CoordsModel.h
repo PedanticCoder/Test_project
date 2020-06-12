@@ -18,16 +18,18 @@ public:
     QVariant headerData( int section, Qt::Orientation orientation, int role ) const override;
     Qt::ItemFlags flags( const QModelIndex& index ) const override;
 
-private:
+private slots:
+    void deleteRow();
 
+private:
     enum Column {
         XCoord = 0,
         YCoord
     };
 
     using CoordData = QHash<Column, QVariant>;
-
-    QList<CoordData> m_coordinates;
+    using Coordinates = QList<CoordData>;
+    Coordinates m_coordinates;
 };
 
 #endif // COORDSMODEL_H
