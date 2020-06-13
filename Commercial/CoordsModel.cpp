@@ -9,7 +9,7 @@ CoordsModel::CoordsModel()
 
     for(quint8 i = 0; i < 10; ++i) {
         coords[XCoord] = i;
-        coords[YCoord] = i * 10;
+        coords[YCoord] = rand() % 100;
         int row = m_coordinates.count();
         beginInsertRows(QModelIndex(), row, row);
         m_coordinates.append(coords);
@@ -89,6 +89,12 @@ Qt::ItemFlags CoordsModel::flags(const QModelIndex &index) const
     }
 
     return flags;
+}
+
+std::pair<QVariant, QVariant> CoordsModel::getCoordinatesFromRow(quint64 row) const
+{
+    return std::make_pair(m_coordinates[row][XCoord],
+                          m_coordinates[row][YCoord]);
 }
 
 void CoordsModel::deleteRow()

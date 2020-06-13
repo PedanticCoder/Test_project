@@ -28,14 +28,10 @@ void AppWindow::setupUI()
     setupChart();
 
     m_pCoordsTable->setStyleSheet("background: #7B7B7C");
-    m_pCoordsTable->setFixedSize(width() / 2, height() / 1.25);
-//    m_pGridLayout->setColumnMinimumWidth(0, m_pCoordsTable->width());
+    m_pCoordsTable->setFixedWidth(width() / 3.7);
     qDebug() << "ширина tableview = " << m_pCoordsTable->width();
-//    m_pGridLayout->setColumnStretch(0, 1);
-//    m_pGridLayout->setRowStretch(0, 1);
     m_pGridLayout->addWidget(m_pChartView, 0, 0);
     m_pGridLayout->addWidget(m_pCoordsTable, 0, 1);
-//    m_pGridLayout->setGeometry(QRect(400, 300, 350, 250));
     qDebug() << "строк в сетке = " << m_pGridLayout->rowCount();
     qDebug() << "стобцов в сетке = " << m_pGridLayout->columnCount();
 
@@ -53,6 +49,13 @@ void AppWindow::setupUI()
 void AppWindow::setupChart()
 {
     QLineSeries *series = new QLineSeries();
+    // TODO проверить на пустой модели, не будет ли крашиться прога
+    qDebug() << "столбцов в таблице: " << m_pCoordsTable->model()->rowCount();
+    quint64 rowsInTable = m_pCoordsTable->model()->rowCount();
+    for(quint64 i = 0; i < rowsInTable; ++i) {
+        std::pair<QVariant, QVariant> coords = m_CoordsModel.getCoordinatesFromRow(i);
+        series->append(coords.first.toInt(), coords.second.toInt());
+    }
     QChart *chart = new QChart();
     chart->legend()->hide();
     chart->addSeries(series);
@@ -67,14 +70,16 @@ void AppWindow::slotCustomMenuRequested(QPoint pos)
     // TODO сделть вызов контекстного меню только под кликом над выбранными строчками?
     if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty())
         m_pMenu->popup(m_pCoordsTable->viewport()->mapToGlobal(pos));
-    /* Call to context menu */
-    connect(m_pDeleteRow, &QAction::triggered, [=]{
-        QVector<QModelIndex> selectedIndexes = m_pCoordsTable->selectedIndexesWrapper().toVector();
-        if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty()) {
+    /* Вызов контекстного меню */
+//    connect(m_pDeleteRow, &QAction::triggered, [=]{
+//        QVector<QModelIndex> selectedIndexes = m_pCoordsTable->selectedIndexesWrapper().toVector();
+//        if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty()) {
 //            qDebug() << "Первая выделенная строчка: "
 //                     << selectedIndexes.at(1).row();
-        }
-    });
+//        }
+//    });
+    connect(m_pDeleteRow,   &QAction::triggered,
+            &m_CoordsModel, &CoordsModel::deleteRow);
 }
 
 AppWindow::~AppWindow()

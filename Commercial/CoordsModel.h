@@ -18,7 +18,10 @@ public:
     QVariant headerData( int section, Qt::Orientation orientation, int role ) const override;
     Qt::ItemFlags flags( const QModelIndex& index ) const override;
 
-private slots:
+public:
+    std::pair<QVariant, QVariant> getCoordinatesFromRow(quint64 row) const;
+
+public slots:
     void deleteRow();
 
 private:
