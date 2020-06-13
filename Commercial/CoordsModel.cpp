@@ -36,9 +36,13 @@ int CoordsModel::columnCount(const QModelIndex &parent) const
 QVariant CoordsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || m_coordinates.count() <= index.row() ||
-       (role!=Qt::DisplayRole && role!=Qt::EditRole)) {
+       (role!=Qt::DisplayRole && role!=Qt::EditRole && role!=Qt::TextAlignmentRole)) {
         return {};
     }
+
+    if(role==Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
+
     return m_coordinates[index.row()][Column(index.column())];
 }
 
