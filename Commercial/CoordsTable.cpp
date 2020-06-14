@@ -5,7 +5,7 @@ CoordsTable::CoordsTable(QWidget *parent)
 {
     setContextMenuPolicy(Qt::CustomContextMenu);
     setSelectionBehavior(QAbstractItemView::SelectRows);
-    setSelectionMode(QAbstractItemView::MultiSelection);
+    setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::DoubleClicked);
     setStyleSheet("background: #7B7B7C");
 }

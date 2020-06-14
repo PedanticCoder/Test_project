@@ -30,7 +30,7 @@ int CoordsModel::rowCount(const QModelIndex &parent) const
 int CoordsModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 2;
+    return ColumnCount;
 }
 
 QVariant CoordsModel::data(const QModelIndex &index, int role) const
@@ -97,9 +97,33 @@ std::pair<QVariant, QVariant> CoordsModel::getCoordinatesFromRow(quint64 row) co
                           m_coordinates[row][YCoord]);
 }
 
-void CoordsModel::deleteRow()
+void CoordsModel::deleteRow(quint64 row)
 {
-    beginRemoveRows(QModelIndex(), 3, 3);
-    m_coordinates.removeAt(3);
+    beginResetModel(); // разобраться, как работает
+
+    beginRemoveRows(QModelIndex(), row, row);
+    m_coordinates.removeAt(row);
     endRemoveRows();
+
+    endResetModel();
+}
+
+void CoordsModel::addRow(quint64 rowAfter)
+{
+    // TODO передавать данные выделенной строки в новую строку
+    beginResetModel();
+
+    int row = m_coordinates.count();
+    qDebug() << "rows before insertion = " << row;
+    beginInsertRows(QModelIndex(), rowAfter + 1, rowAfter + 1);
+    CoordData coords;
+    coords[XCoord] = 99;
+    coords[YCoord] = 99;
+    m_coordinates.insert(rowAfter + 1, coords);
+    endInsertRows();
+
+    endResetModel();
+
+    row = m_coordinates.count();
+//    qDebug() <<
 }

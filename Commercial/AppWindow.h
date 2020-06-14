@@ -26,6 +26,11 @@ private:
 
 private slots:
     void slotCustomMenuRequested(QPoint pos);
+    void selectedRow();
+
+signals:
+    void rowSelectedToBeRemoved(quint64 row);
+    void rowSelectedToBeInserted(quint64 row);
 
 private:
     QGridLayout *m_pGridLayout;

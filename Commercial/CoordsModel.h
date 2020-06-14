@@ -22,12 +22,14 @@ public:
     std::pair<QVariant, QVariant> getCoordinatesFromRow(quint64 row) const;
 
 public slots:
-    void deleteRow();
+    void deleteRow(quint64 row);
+    void addRow(quint64 rowAfter);
 
 private:
     enum Column {
         XCoord = 0,
-        YCoord
+        YCoord,
+        ColumnCount
     };
 
     using CoordData = QHash<Column, QVariant>;

@@ -44,6 +44,12 @@ void AppWindow::setupUI()
 
     connect(m_pCoordsTable, &CoordsTable::customContextMenuRequested,
             this,           &AppWindow::slotCustomMenuRequested);
+
+    connect(this,           &AppWindow::rowSelectedToBeRemoved,
+            &m_CoordsModel, &CoordsModel::deleteRow);
+
+    connect(this,           &AppWindow::rowSelectedToBeInserted,
+            &m_CoordsModel, &CoordsModel::addRow);
 }
 
 void AppWindow::setupChart()
@@ -63,23 +69,30 @@ void AppWindow::setupChart()
     chart->setTitle("Simple line chart example");
     m_pChartView = new QChartView(chart);
     m_pChartView->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+    m_pChartView->setRenderHint(QPainter::Antialiasing);
 }
 
 void AppWindow::slotCustomMenuRequested(QPoint pos)
 {
-    // TODO сделть вызов контекстного меню только под кликом над выбранными строчками?
     if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty())
         m_pMenu->popup(m_pCoordsTable->viewport()->mapToGlobal(pos));
-    /* Вызов контекстного меню */
-//    connect(m_pDeleteRow, &QAction::triggered, [=]{
-//        QVector<QModelIndex> selectedIndexes = m_pCoordsTable->selectedIndexesWrapper().toVector();
-//        if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty()) {
-//            qDebug() << "Первая выделенная строчка: "
-//                     << selectedIndexes.at(1).row();
-//        }
-//    });
-    connect(m_pDeleteRow,   &QAction::triggered,
-            &m_CoordsModel, &CoordsModel::deleteRow);
+    connect(m_pDeleteRow, &QAction::triggered,
+            this,         &AppWindow::selectedRow);
+    connect(m_pAddRow,    &QAction::triggered,
+            this,         &AppWindow::selectedRow);
+}
+
+void AppWindow::selectedRow()
+{
+    QVector<QModelIndex> selectedIndexes = m_pCoordsTable->selectedIndexesWrapper().toVector();
+    if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty()) {
+        qDebug() << "Выделенная строчка: "
+                 << selectedIndexes.at(1).row();
+        QAction *senderPtr = qobject_cast<QAction*>(sender());
+        qDebug() << "отправитель сигнала: " << senderPtr->text();
+        if(senderPtr->text() == "Удалить")  emit rowSelectedToBeRemoved(selectedIndexes.at(1).row());
+        if(senderPtr->text() == "Добавить") emit rowSelectedToBeInserted(selectedIndexes.at(1).row());
+    }
 }
 
 AppWindow::~AppWindow()
