@@ -100,6 +100,11 @@ void AppWindow::selectedRow()
     }
 }
 
+void AppWindow::deleteSeries(quint64 index)
+{
+    m_pSeries->remove(index);
+}
+
 void AppWindow::addSeries(quint64 index)
 {
     QModelIndex model_index_x = m_CoordsModel.index(index, 0, QModelIndex());
@@ -107,8 +112,6 @@ void AppWindow::addSeries(quint64 index)
     const qreal x_coord_data = m_CoordsModel.data(model_index_x).toInt();
     const qreal y_coord_data = m_CoordsModel.data(model_index_y).toInt();
     m_pSeries->insert(index, {x_coord_data, y_coord_data});
-    m_pChartView->repaint();
-
 }
 
 void AppWindow::changeSeries(quint64 index)

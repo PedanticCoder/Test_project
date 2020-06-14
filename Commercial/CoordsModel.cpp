@@ -118,7 +118,6 @@ void CoordsModel::addRow(quint64 rowAfter)
 {
     beginResetModel();
 
-    int row = m_coordinates.count();
     beginInsertRows(QModelIndex(), rowAfter + 1, rowAfter + 1);
     CoordData coords;
     coords[XCoord] = m_coordinates[rowAfter][XCoord];
@@ -127,6 +126,4 @@ void CoordsModel::addRow(quint64 rowAfter)
     endInsertRows();
 
     endResetModel();
-
-    row = m_coordinates.count();
 }
