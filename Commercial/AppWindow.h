@@ -27,7 +27,7 @@ private:
 private slots:
     void slotCustomMenuRequested(QPoint pos);
     void selectedRow();
-    void deleteSeries(quint64 index) { m_pSeries->remove(index); }
+    void deleteSeries(quint64 index) { m_pSeries->remove(index); m_pChartView->repaint(); }
     void addSeries(quint64 index);
     void changeSeries(quint64 index);
 

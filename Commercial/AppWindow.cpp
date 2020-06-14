@@ -72,6 +72,7 @@ void AppWindow::setupChart()
     m_pChart->addSeries(m_pSeries);
     m_pChart->createDefaultAxes();
     m_pChart->setTitle("Simple line chart example");
+    m_pChart->setAnimationOptions(QChart::AllAnimations);
     m_pChartView = new QChartView(m_pChart);
     m_pChartView->chart()->setTheme(QChart::ChartThemeBlueCerulean);
     m_pChartView->setRenderHint(QPainter::Antialiasing);
@@ -106,6 +107,8 @@ void AppWindow::addSeries(quint64 index)
     const qreal x_coord_data = m_CoordsModel.data(model_index_x).toInt();
     const qreal y_coord_data = m_CoordsModel.data(model_index_y).toInt();
     m_pSeries->insert(index, {x_coord_data, y_coord_data});
+    m_pChartView->repaint();
+
 }
 
 void AppWindow::changeSeries(quint64 index)
