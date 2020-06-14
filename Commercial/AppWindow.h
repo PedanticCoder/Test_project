@@ -27,6 +27,9 @@ private:
 private slots:
     void slotCustomMenuRequested(QPoint pos);
     void selectedRow();
+    void deleteSeries(quint64 index) { m_pSeries->remove(index); }
+    void addSeries(quint64 index);
+    void changeSeries(quint64 index);
 
 signals:
     void rowSelectedToBeRemoved(quint64 row);
@@ -39,6 +42,8 @@ private:
     QMenu       *m_pMenu;
     QAction     *m_pAddRow;
     QAction     *m_pDeleteRow;
+    QLineSeries *m_pSeries;
+    QChart      *m_pChart;
     QChartView  *m_pChartView;
 };
 #endif // APPWINDOW_H

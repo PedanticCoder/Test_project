@@ -23,17 +23,12 @@ void AppWindow::setupUI()
     m_pCoordsTable = new CoordsTable(this);
 
     m_pCoordsTable->setModel(&m_CoordsModel);
-//    QItemSelectionModel selection(&m_CoordsModel);
-//    m_pCoordsTable->setSelectionModel(&selection);
     setupChart();
 
     m_pCoordsTable->setStyleSheet("background: #7B7B7C");
     m_pCoordsTable->setFixedWidth(width() / 3.7);
-    qDebug() << "ширина tableview = " << m_pCoordsTable->width();
     m_pGridLayout->addWidget(m_pChartView, 0, 0);
     m_pGridLayout->addWidget(m_pCoordsTable, 0, 1);
-    qDebug() << "строк в сетке = " << m_pGridLayout->rowCount();
-    qDebug() << "стобцов в сетке = " << m_pGridLayout->columnCount();
 
     m_pMenu = new QMenu(this);
     m_pMenu->setStyleSheet("background: #7B7B7C");
@@ -50,24 +45,34 @@ void AppWindow::setupUI()
 
     connect(this,           &AppWindow::rowSelectedToBeInserted,
             &m_CoordsModel, &CoordsModel::addRow);
+
+    connect(this,           &AppWindow::rowSelectedToBeRemoved,
+            this,           &AppWindow::deleteSeries);
+
+    connect(this,           &AppWindow::rowSelectedToBeInserted,
+            this,           &AppWindow::addSeries);
+
+    connect(&m_CoordsModel, &CoordsModel::seriesCoordChanged,
+            this,           &AppWindow::changeSeries);
 }
 
 void AppWindow::setupChart()
 {
-    QLineSeries *series = new QLineSeries();
+    m_pSeries = new QLineSeries();
     // TODO проверить на пустой модели, не будет ли крашиться прога
     qDebug() << "столбцов в таблице: " << m_pCoordsTable->model()->rowCount();
     quint64 rowsInTable = m_pCoordsTable->model()->rowCount();
     for(quint64 i = 0; i < rowsInTable; ++i) {
         std::pair<QVariant, QVariant> coords = m_CoordsModel.getCoordinatesFromRow(i);
-        series->append(coords.first.toInt(), coords.second.toInt());
+        m_pSeries->append(coords.first.toInt(),
+                          coords.second.toInt());
     }
-    QChart *chart = new QChart();
-    chart->legend()->hide();
-    chart->addSeries(series);
-    chart->createDefaultAxes();
-    chart->setTitle("Simple line chart example");
-    m_pChartView = new QChartView(chart);
+    m_pChart = new QChart();
+    m_pChart->legend()->hide();
+    m_pChart->addSeries(m_pSeries);
+    m_pChart->createDefaultAxes();
+    m_pChart->setTitle("Simple line chart example");
+    m_pChartView = new QChartView(m_pChart);
     m_pChartView->chart()->setTheme(QChart::ChartThemeBlueCerulean);
     m_pChartView->setRenderHint(QPainter::Antialiasing);
 }
@@ -86,13 +91,27 @@ void AppWindow::selectedRow()
 {
     QVector<QModelIndex> selectedIndexes = m_pCoordsTable->selectedIndexesWrapper().toVector();
     if(!m_pCoordsTable->selectedIndexesWrapper().isEmpty()) {
-        qDebug() << "Выделенная строчка: "
-                 << selectedIndexes.at(1).row();
         QAction *senderPtr = qobject_cast<QAction*>(sender());
-        qDebug() << "отправитель сигнала: " << senderPtr->text();
-        if(senderPtr->text() == "Удалить")  emit rowSelectedToBeRemoved(selectedIndexes.at(1).row());
-        if(senderPtr->text() == "Добавить") emit rowSelectedToBeInserted(selectedIndexes.at(1).row());
+        if(senderPtr->text() == "Удалить")
+            emit rowSelectedToBeRemoved(selectedIndexes.at(1).row());
+        if(senderPtr->text() == "Добавить")
+            emit rowSelectedToBeInserted(selectedIndexes.at(1).row());
     }
+}
+
+void AppWindow::addSeries(quint64 index)
+{
+    QModelIndex model_index_x = m_CoordsModel.index(index, 0, QModelIndex());
+    QModelIndex model_index_y = m_CoordsModel.index(index, 1, QModelIndex());
+    const qreal x_coord_data = m_CoordsModel.data(model_index_x).toInt();
+    const qreal y_coord_data = m_CoordsModel.data(model_index_y).toInt();
+    m_pSeries->insert(index, {x_coord_data, y_coord_data});
+}
+
+void AppWindow::changeSeries(quint64 index)
+{
+    deleteSeries(index);
+    addSeries(index);
 }
 
 AppWindow::~AppWindow()

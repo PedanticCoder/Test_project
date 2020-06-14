@@ -2,10 +2,13 @@
 #include "CoordsTable.h"
 #include <QDebug>
 #include <QAction>
+#include <ctime>
 
 CoordsModel::CoordsModel()
 {
     CoordData coords;
+
+    srand(time(0));
 
     for(quint8 i = 0; i < 10; ++i) {
         coords[XCoord] = i;
@@ -54,8 +57,11 @@ bool CoordsModel::setData(const QModelIndex &index, const QVariant &value, int r
         return false;
     }
 
-    m_coordinates[index.row()][ Column(index.column())] = value;
-    emit dataChanged(index, index);
+    if(m_coordinates[index.row()][ Column(index.column())] != value) {
+        m_coordinates[index.row()][ Column(index.column())] = value;
+        emit dataChanged(index, index);
+        emit seriesCoordChanged(index.row());
+    }
 
     qDebug() << "-----setData end successfully!-----";
     return true;
@@ -99,7 +105,7 @@ std::pair<QVariant, QVariant> CoordsModel::getCoordinatesFromRow(quint64 row) co
 
 void CoordsModel::deleteRow(quint64 row)
 {
-    beginResetModel(); // разобраться, как работает
+    beginResetModel();
 
     beginRemoveRows(QModelIndex(), row, row);
     m_coordinates.removeAt(row);
@@ -110,20 +116,17 @@ void CoordsModel::deleteRow(quint64 row)
 
 void CoordsModel::addRow(quint64 rowAfter)
 {
-    // TODO передавать данные выделенной строки в новую строку
     beginResetModel();
 
     int row = m_coordinates.count();
-    qDebug() << "rows before insertion = " << row;
     beginInsertRows(QModelIndex(), rowAfter + 1, rowAfter + 1);
     CoordData coords;
-    coords[XCoord] = 99;
-    coords[YCoord] = 99;
+    coords[XCoord] = m_coordinates[rowAfter][XCoord];
+    coords[YCoord] = m_coordinates[rowAfter][YCoord];
     m_coordinates.insert(rowAfter + 1, coords);
     endInsertRows();
 
     endResetModel();
 
     row = m_coordinates.count();
-//    qDebug() <<
 }

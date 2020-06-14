@@ -25,6 +25,9 @@ public slots:
     void deleteRow(quint64 row);
     void addRow(quint64 rowAfter);
 
+signals:
+    void seriesCoordChanged(quint64 row);
+
 private:
     enum Column {
         XCoord = 0,
